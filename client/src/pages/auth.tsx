@@ -56,14 +56,25 @@ export default function AuthPage() {
 
   const handleLogin = async (data: LoginForm) => {
     setIsLoading(true);
+    console.log("Attempting login with:", { email: data.email });
+    
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+
       if (response.ok) {
+        const result = await response.json();
+        console.log("Login success:", result);
         toast({
           title: "Login Successful",
           description: "Welcome back to ScrapeForge!",
@@ -72,7 +83,7 @@ export default function AuthPage() {
         window.location.reload();
       } else {
         const error = await response.json();
-        console.log("Login failed with:", error);
+        console.log("Login failed with status:", response.status, "error:", error);
         toast({
           title: "Login Failed",
           description: error.message || "Invalid email or password",
@@ -80,7 +91,7 @@ export default function AuthPage() {
         });
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Network/parsing error during login:", error);
       toast({
         title: "Login Error",
         description: "Unable to connect to server. Please check your connection and try again.",

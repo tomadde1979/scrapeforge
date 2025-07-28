@@ -7,7 +7,7 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Projects from "@/pages/projects";
 import Settings from "@/pages/settings";
-import Login from "@/pages/login";
+import AuthPage from "@/pages/auth";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 import CreateProjectModal from "@/components/modals/create-project-modal";
@@ -58,7 +58,7 @@ function Router() {
 
   // Show login page if not authenticated
   if (!isAuthenticated) {
-    return <Login />;
+    return <AuthPage />;
   }
 
   // Show authenticated app

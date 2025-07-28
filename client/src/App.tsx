@@ -10,6 +10,7 @@ import Settings from "@/pages/settings";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 import CreateProjectModal from "@/components/modals/create-project-modal";
+import EditProjectModal from "@/components/modals/edit-project-modal";
 import { useAppStore } from "@/store/use-app-store";
 
 function Router() {
@@ -40,6 +41,7 @@ function App() {
           </div>
           
           <CreateProjectModal />
+          <EditProjectModal />
           <Toaster />
         </div>
       </TooltipProvider>

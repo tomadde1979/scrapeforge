@@ -11,7 +11,7 @@ import { Plus, FolderOpen, Play, Pause, Settings, Trash2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function Projects() {
-  const { setCreateProjectModalOpen } = useAppStore();
+  const { setCreateProjectModalOpen, setEditProjectModalOpen, setEditingProject } = useAppStore();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -64,6 +64,11 @@ export default function Projects() {
     if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
       deleteProjectMutation.mutate(projectId);
     }
+  };
+
+  const handleEditProject = (project: any) => {
+    setEditingProject(project);
+    setEditProjectModalOpen(true);
   };
 
   if (isLoading) {
@@ -174,7 +179,11 @@ export default function Projects() {
                   </Button>
                   
                   <div className="flex space-x-1">
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleEditProject(project)}
+                    >
                       <Settings className="h-3 w-3" />
                     </Button>
                     <Button

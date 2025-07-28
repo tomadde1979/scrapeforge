@@ -5,6 +5,8 @@ interface AppState {
   // UI State
   sidebarOpen: boolean;
   createProjectModalOpen: boolean;
+  editProjectModalOpen: boolean;
+  editingProject: Project | null;
   
   // Data State
   projects: Project[];
@@ -22,6 +24,8 @@ interface AppState {
   // Actions
   setSidebarOpen: (open: boolean) => void;
   setCreateProjectModalOpen: (open: boolean) => void;
+  setEditProjectModalOpen: (open: boolean) => void;
+  setEditingProject: (project: Project | null) => void;
   setProjects: (projects: Project[]) => void;
   setCurrentProject: (project: Project | null) => void;
   setDashboardStats: (stats: DashboardStats | null) => void;
@@ -37,6 +41,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Initial State
   sidebarOpen: true,
   createProjectModalOpen: false,
+  editProjectModalOpen: false,
+  editingProject: null,
   projects: [],
   currentProject: null,
   dashboardStats: null,
@@ -50,6 +56,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Actions
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   setCreateProjectModalOpen: (open) => set({ createProjectModalOpen: open }),
+  setEditProjectModalOpen: (open) => set({ editProjectModalOpen: open }),
+  setEditingProject: (project) => set({ editingProject: project }),
   setProjects: (projects) => set({ projects }),
   setCurrentProject: (project) => set({ currentProject: project }),
   setDashboardStats: (stats) => set({ dashboardStats: stats }),

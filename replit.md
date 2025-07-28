@@ -108,6 +108,12 @@ The application uses a relational database structure with the following core ent
 
 ## Recent Changes (January 2025)
 
+### GitHub Connection Process (January 28, 2025)
+- **Git Integration Located**: User successfully found Git option in Replit Workspace Features panel
+- **Deployment Ready**: Project prepared for GitHub connection and Railway deployment
+- **Browser Dependencies Solution**: Railway.app configured as target platform for headless scraping
+- **Next Step**: GitHub repository creation and Railway deployment for full browser support
+
 ### Headless Browser Scraping Implementation (January 28, 2025)
 - **Playwright Integration**: Advanced headless browser automation with stealth capabilities
 - **Instagram Hashtag Scraping**: Navigate hashtag pages, scroll posts, extract profile data

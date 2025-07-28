@@ -104,8 +104,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "Scraping started", projectId });
     } catch (error) {
       console.error(`❌ ROUTE ERROR in /api/projects/:id/scrape:`, error);
-      console.error(`❌ Error stack:`, error.stack);
-      res.status(500).json({ error: "Failed to start scraping", details: error.message });
+      console.error(`❌ Error stack:`, error instanceof Error ? error.stack : 'Unknown error');
+      res.status(500).json({ error: "Failed to start scraping", details: error instanceof Error ? error.message : 'Unknown error' });
     }
   });
 

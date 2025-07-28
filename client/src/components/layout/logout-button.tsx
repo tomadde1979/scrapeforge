@@ -8,7 +8,7 @@ export default function LogoutButton() {
   return (
     <div className="flex items-center gap-3">
       <span className="text-sm text-muted-foreground">
-        Welcome, {user?.username}
+        Welcome, {user?.email}
       </span>
       <Button
         variant="ghost"

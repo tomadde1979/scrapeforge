@@ -4,8 +4,7 @@ import type { User } from "@shared/schema";
 
 interface AuthUser {
   id: string;
-  username: string;
-  email?: string;
+  email: string;
   createdAt: string;
 }
 

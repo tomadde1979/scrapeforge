@@ -16,25 +16,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, password, email } = registerSchema.parse(req.body);
+      const { email, password } = registerSchema.parse(req.body);
       
       // Check if user already exists
-      const existingUser = await storage.getUserByUsername(username);
+      const existingUser = await storage.getUserByEmail(email);
       if (existingUser) {
-        return res.status(400).json({ message: "Username already exists" });
+        return res.status(400).json({ message: "Email already exists" });
       }
 
       // Hash password and create user
       const hashedPassword = await hashPassword(password);
       const user = await storage.createUser({
-        username,
+        email,
         password: hashedPassword,
-        email: email || null,
       });
 
       res.status(201).json({
         message: "Account created successfully",
-        user: { id: user.id, username: user.username, email: user.email },
+        user: { id: user.id, email: user.email },
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -50,18 +49,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/login", async (req, res) => {
     try {
-      const { username, password } = loginSchema.parse(req.body);
+      const { email, password } = loginSchema.parse(req.body);
       
       // Find user
-      const user = await storage.getUserByUsername(username);
+      const user = await storage.getUserByEmail(email);
       if (!user) {
-        return res.status(401).json({ message: "Invalid username or password" });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
 
       // Verify password
       const isValidPassword = await verifyPassword(password, user.password);
       if (!isValidPassword) {
-        return res.status(401).json({ message: "Invalid username or password" });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
 
       // Create session
@@ -69,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json({
         message: "Login successful",
-        user: { id: user.id, username: user.username, email: user.email },
+        user: { id: user.id, email: user.email },
       });
     } catch (error) {
       if (error instanceof z.ZodError) {

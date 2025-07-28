@@ -12,16 +12,12 @@ import { Link, useLocation } from "wouter";
 import { Eye, EyeOff, LogIn, UserPlus } from "lucide-react";
 
 const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const registerSchema = z.object({
-  username: z.string()
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be less than 20 characters")
-    .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, hyphens, and underscores"),
-  email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
+  email: z.string().email("Please enter a valid email address"),
   password: z.string()
     .min(8, "Password must be at least 8 characters")
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
@@ -45,7 +41,7 @@ export default function AuthPage() {
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -53,7 +49,6 @@ export default function AuthPage() {
   const registerForm = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -112,7 +107,7 @@ export default function AuthPage() {
           description: "Your account has been created. You can now log in.",
         });
         setIsLogin(true);
-        loginForm.setValue("username", data.username);
+        loginForm.setValue("email", data.email);
       } else {
         const error = await response.json();
         toast({
@@ -157,13 +152,14 @@ export default function AuthPage() {
               <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                 <FormField
                   control={loginForm.control}
-                  name="username"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Enter your username" 
+                          type="email"
+                          placeholder="Enter your email" 
                           {...field}
                           disabled={isLoading}
                         />
@@ -226,27 +222,10 @@ export default function AuthPage() {
               <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
                 <FormField
                   control={registerForm.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Choose a username" 
-                          {...field}
-                          disabled={isLoading}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={registerForm.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email (Optional)</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input 
                           type="email"

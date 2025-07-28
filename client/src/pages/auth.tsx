@@ -72,6 +72,7 @@ export default function AuthPage() {
         window.location.reload();
       } else {
         const error = await response.json();
+        console.log("Login failed with:", error);
         toast({
           title: "Login Failed",
           description: error.message || "Invalid email or password",

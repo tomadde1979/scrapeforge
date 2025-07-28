@@ -18,6 +18,7 @@ export class RealRedditScraper extends BaseScraper {
     try {
       this.browser = await puppeteer.launch({
         headless: true,
+        executablePath: '/home/runner/.cache/puppeteer/chrome/linux-138.0.7204.168/chrome-linux64/chrome',
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',

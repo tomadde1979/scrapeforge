@@ -1,11 +1,8 @@
 import { storage } from '../storage';
 import { parseEmailFromText } from './openai';
-import { InstagramScraper } from './scrapers/instagram';
-import { InstagramAdvancedScraper } from './scrapers/instagram-advanced';
-import { RealInstagramScraper } from './scrapers/real-instagram';
-import { LinkedInScraper } from './scrapers/linkedin';
-import { RedditScraper } from './scrapers/reddit';
-import { RealRedditScraper } from './scrapers/real-reddit';
+import { ApiInstagramScraper } from './scrapers/api-instagram';
+import { ApiRedditScraper } from './scrapers/api-reddit';
+import { AuthenticLinkedInScraper } from './scrapers/authentic-linkedin';
 import { BaseScraper, ScrapedProfile } from './scrapers/base';
 
 export class ScraperEngine {
@@ -182,23 +179,13 @@ export class ScraperEngine {
 
     switch (platform.toLowerCase()) {
       case 'instagram':
-        // Use real scraper for actual data collection
-        if (process.env.NODE_ENV === 'production' || project?.useRealScraping) {
-          return new RealInstagramScraper(options);
-        }
-        // Use advanced scraper if advanced features are enabled (demo mode)
-        if (project?.includeFollowers || project?.includeCommenters) {
-          return new InstagramAdvancedScraper(options);
-        }
-        return new InstagramScraper(options);
+        return new ApiInstagramScraper(options);
       case 'linkedin':
-        return new LinkedInScraper(options);
+        return new AuthenticLinkedInScraper(options);
       case 'reddit':
-        // Use real Reddit scraper for production
-        if (process.env.NODE_ENV === 'production' || project?.useRealScraping) {
-          return new RealRedditScraper(options);
-        }
-        return new RedditScraper(options);
+        return new ApiRedditScraper(options);
+      case 'twitter':
+        return new ApiRedditScraper(options); // Use Reddit API approach for Twitter too
       default:
         return null;
     }

@@ -1,0 +1,32 @@
+{
+  "name": "fullstack-vite-express",
+  "version": "1.0.0",
+  "description": "Full-stack JavaScript app with Vite React frontend and Express backend",
+  "main": "server/index.cjs",
+  "scripts": {
+    "heroku-postbuild": "cd client && npm install && npm run build",
+    "start": "node server/index.cjs",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon server/index.cjs",
+    "dev:client": "cd client && npm run dev"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "fullstack",
+    "react",
+    "vite",
+    "express",
+    "heroku"
+  ],
+  "author": "",
+  "license": "MIT"
+}

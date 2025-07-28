@@ -13,6 +13,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Session middleware
   app.use(sessionMiddleware);
 
+  // Simple API routes for the demo app
+  app.get('/api/health', (req, res) => {
+    res.json({
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      port: 5000
+    });
+  });
+
+  app.get('/api/test', (req, res) => {
+    res.json({
+      message: 'Backend is working!',
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
     try {

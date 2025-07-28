@@ -79,9 +79,10 @@ export default function AuthPage() {
         });
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         title: "Login Error",
-        description: "An unexpected error occurred. Please try again.",
+        description: "Unable to connect to server. Please check your connection and try again.",
         variant: "destructive",
       });
     } finally {
@@ -115,9 +116,10 @@ export default function AuthPage() {
         });
       }
     } catch (error) {
+      console.error("Registration error:", error);
       toast({
-        title: "Registration Error",
-        description: "An unexpected error occurred. Please try again.",
+        title: "Registration Error", 
+        description: "Unable to connect to server. Please check your connection and try again.",
         variant: "destructive",
       });
     } finally {

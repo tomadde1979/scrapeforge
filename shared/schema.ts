@@ -132,22 +132,10 @@ export const insertScrapingJobSchema = createInsertSchema(scrapingJobs).omit({
   createdAt: true,
 });
 
-// Types
-export type User = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
-export type Project = typeof projects.$inferSelect;
-export type InsertProject = typeof projects.$inferInsert;
-export type ScrapingResult = typeof scrapingResults.$inferSelect;
-export type InsertScrapingResult = typeof scrapingResults.$inferInsert;
-export type ScrapingLog = typeof scrapingLogs.$inferSelect;
-export type InsertScrapingLog = typeof scrapingLogs.$inferInsert;
-export type ScrapingJob = typeof scrapingJobs.$inferSelect;
-export type InsertScrapingJob = typeof scrapingJobs.$inferInsert;
-
 // Auth schemas
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export const registerSchema = z.object({
@@ -160,15 +148,11 @@ export const registerSchema = z.object({
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
-
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
-
 export type ScrapingResult = typeof scrapingResults.$inferSelect;
 export type InsertScrapingResult = z.infer<typeof insertScrapingResultSchema>;
-
 export type ScrapingLog = typeof scrapingLogs.$inferSelect;
 export type InsertScrapingLog = z.infer<typeof insertScrapingLogSchema>;
-
 export type ScrapingJob = typeof scrapingJobs.$inferSelect;
 export type InsertScrapingJob = z.infer<typeof insertScrapingJobSchema>;

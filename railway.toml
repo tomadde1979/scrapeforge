@@ -1,12 +1,11 @@
 [build]
-builder = "nixpacks"
+builder = "NIXPACKS"
 
 [deploy]
-startCommand = "node app.cjs"
+startCommand = "npm start"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 100
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10
+restartPolicyType = "ON_FAILURE"
 
-[build.env]
+[env]
 NODE_ENV = "production"

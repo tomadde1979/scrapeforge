@@ -48,6 +48,7 @@ function App() {
             <div className="status success">
               <p><strong>Status:</strong> Connected ✅</p>
               <p><strong>Message:</strong> {serverData.message}</p>
+              <p><strong>Deployment:</strong> {serverData.deployment || 'Local'}</p>
               <p><strong>Time:</strong> {new Date(serverData.timestamp).toLocaleString()}</p>
             </div>
           ) : (

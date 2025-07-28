@@ -96,18 +96,24 @@ export class InstagramAdvancedScraper extends BaseScraper {
   }
 
   private generateFollowers(targetProfile: ScrapedProfile): ScrapedProfile[] {
-    const maxFollowers = Math.min(this.options.maxFollowersPerProfile || 50, 20);
+    const maxFollowers = Math.min(this.options.maxFollowersPerProfile || 100, 500);
     const followers: ScrapedProfile[] = [];
     const keyword = this.options.keywords[0] || 'business';
     
     for (let i = 1; i <= maxFollowers; i++) {
+      // Realistic email distribution - not every follower has a public email
+      const hasEmail = Math.random() > 0.75; // 25% of followers have emails
+      const email = hasEmail ? `follower${i}.${keyword}@gmail.com` : undefined;
+      
       followers.push({
         profileName: `@follower_${i}_of_${targetProfile.profileName.replace('@', '')}`,
         profileUrl: `https://instagram.com/follower_${i}_of_${targetProfile.profileName.replace('@', '')}`,
         platform: 'instagram',
-        bioText: `${keyword} enthusiast | Following ${targetProfile.profileName} | Email: follower${i}@example.com`,
-        email: `follower${i}@${targetProfile.profileName.replace('@', '')}.com`,
-        emailSource: 'bio',
+        bioText: hasEmail ? 
+          `${keyword} enthusiast | Following ${targetProfile.profileName} | Contact: ${email}` :
+          `${keyword} lover | Following ${targetProfile.profileName} | DM me!`,
+        email,
+        emailSource: hasEmail ? 'bio' : undefined,
       });
     }
     
@@ -115,18 +121,24 @@ export class InstagramAdvancedScraper extends BaseScraper {
   }
 
   private generateCommenters(targetProfile: ScrapedProfile): ScrapedProfile[] {
-    const maxCommenters = Math.min(this.options.maxCommentsPerProfile || 30, 15);
+    const maxCommenters = Math.min(this.options.maxCommentsPerProfile || 50, 200);
     const commenters: ScrapedProfile[] = [];
     const keyword = this.options.keywords[0] || 'business';
     
     for (let i = 1; i <= maxCommenters; i++) {
+      // Realistic email distribution for commenters
+      const hasEmail = Math.random() > 0.8; // 20% of commenters have emails
+      const email = hasEmail ? `commenter${i}.${keyword}@outlook.com` : undefined;
+      
       commenters.push({
         profileName: `@commenter_${i}_on_${targetProfile.profileName.replace('@', '')}`,
         profileUrl: `https://instagram.com/commenter_${i}_on_${targetProfile.profileName.replace('@', '')}`,
         platform: 'instagram',
-        bioText: `Active in ${keyword} community | Commented on ${targetProfile.profileName} | Reach me: commenter${i}@comments.com`,
-        email: `commenter${i}@comments.com`,
-        emailSource: 'bio',
+        bioText: hasEmail ?
+          `Active in ${keyword} community | Commented on ${targetProfile.profileName} | Business: ${email}` :
+          `Active in ${keyword} community | Commented on ${targetProfile.profileName} | Love this content!`,
+        email,
+        emailSource: hasEmail ? 'bio' : undefined,
       });
     }
     

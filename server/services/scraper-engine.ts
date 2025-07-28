@@ -169,8 +169,8 @@ export class ScraperEngine {
   private createScraper(platform: string, keywords: string[], project?: any): BaseScraper | null {
     const options = {
       keywords,
-      maxProfiles: 1000, // Increased to scan many more profiles
-      rateLimitMs: 800, // Faster scraping - 0.8 second delay
+      maxProfiles: 10000, // Dramatically increased - scan up to 10k profiles per platform
+      rateLimitMs: 300, // Much faster scraping - 0.3 second delay
       includeFollowers: project?.includeFollowers || false,
       includeCommenters: project?.includeCommenters || false,
       maxFollowersPerProfile: project?.maxFollowersPerProfile || 100,

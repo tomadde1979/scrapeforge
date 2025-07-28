@@ -109,14 +109,14 @@ export class InstagramScraper extends BaseScraper {
       });
     });
 
-    // Generate many more profiles
-    for (let i = 0; i < 500; i++) {
+    // Generate many more profiles - scale to support large niches like astrology
+    for (let i = 0; i < 5000; i++) {
       const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
       const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
       const username = `${prefix}${suffix}${Math.floor(Math.random() * 999)}`;
       
       // Not all profiles have emails - simulate realistic distribution
-      const hasEmail = Math.random() > 0.7; // 30% have emails
+      const hasEmail = Math.random() > 0.6; // 40% have emails (higher for business/creator accounts)
       const email = hasEmail ? `${username.replace(/[0-9]/g, '')}@${domains[Math.floor(Math.random() * domains.length)]}` : undefined;
       
       const bios = [

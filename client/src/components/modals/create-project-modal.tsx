@@ -38,7 +38,7 @@ const createProjectSchema = z.object({
   maxFollowersPerProfile: z.number().min(10).max(500).default(100),
   maxCommentsPerProfile: z.number().min(10).max(200).default(50),
   maxPostsToScan: z.number().min(1).max(50).default(10),
-  useRealScraping: z.boolean().default(false),
+  useRealScraping: z.boolean().default(true),
 });
 
 type CreateProjectForm = z.infer<typeof createProjectSchema>;
@@ -68,7 +68,7 @@ export default function CreateProjectModal() {
       maxFollowersPerProfile: 100,
       maxCommentsPerProfile: 50,
       maxPostsToScan: 10,
-      useRealScraping: false,
+      useRealScraping: true,
     },
   });
 

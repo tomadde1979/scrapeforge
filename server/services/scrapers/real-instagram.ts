@@ -16,7 +16,7 @@ export class RealInstagramScraper extends BaseScraper {
     let processed = 0;
 
     try {
-      // Launch browser with stealth settings
+      // Launch browser with stealth settings for Replit
       this.browser = await puppeteer.launch({
         headless: true,
         args: [
@@ -27,6 +27,12 @@ export class RealInstagramScraper extends BaseScraper {
           '--no-first-run',
           '--no-zygote',
           '--disable-gpu',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--disable-features=TranslateUI',
+          '--disable-ipc-flooding-protection',
+          '--single-process',
           '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         ]
       });

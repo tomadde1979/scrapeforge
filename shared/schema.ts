@@ -27,7 +27,7 @@ export const projects = pgTable("projects", {
   maxFollowersPerProfile: integer("max_followers_per_profile").default(100),
   maxCommentsPerProfile: integer("max_comments_per_profile").default(50),
   maxPostsToScan: integer("max_posts_to_scan").default(10),
-  useRealScraping: boolean("use_real_scraping").default(false),
+  useRealScraping: boolean("use_real_scraping").default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

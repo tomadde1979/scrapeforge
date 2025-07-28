@@ -1,0 +1,24 @@
+{
+  "name": "vite-express-fullstack",
+  "version": "1.0.0",
+  "description": "Fullstack Vite + Express.js application",
+  "main": "app.cjs",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon app.cjs",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "NODE_ENV=production node app.cjs",
+    "build:start": "npm run build && npm start"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

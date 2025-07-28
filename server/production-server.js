@@ -9,8 +9,8 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Import the main server logic
-import('./index.js').then(async () => {
+// Import the main server logic from the compiled TypeScript output
+import('../dist/index.js').then(async (module) => {
   console.log('Production server started successfully');
 }).catch(error => {
   console.error('Failed to start production server:', error);

@@ -1,10 +1,15 @@
 [build]
-builder = "NIXPACKS"
+builder = "nixpacks"
 
 [deploy]
-startCommand = "npm run build && node server/production-server.js"
-restartPolicyType = "ON_FAILURE"
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
-[plugins]
-postgres = true
+[[services]]
+name = "railway-fullstack-app"
+
+[services.web]
+startCommand = "npm start"

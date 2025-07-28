@@ -5,9 +5,9 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-// Fix for import.meta.dirname in production
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Fix for import.meta.dirname in production with fallback
+const __filename = fileURLToPath(import.meta.url || 'file:///app/server/production-server.js');
+const __dirname = dirname(__filename || '/app/server');
 
 // Import the main server logic from the compiled TypeScript output
 import('../dist/index.js').then(async (module) => {
@@ -19,7 +19,7 @@ import('../dist/index.js').then(async (module) => {
   const app = express();
   
   // Serve static files with correct path resolution
-  const distPath = path.resolve(__dirname, 'public');
+  const distPath = path.resolve(__dirname, '../dist');
   
   if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));

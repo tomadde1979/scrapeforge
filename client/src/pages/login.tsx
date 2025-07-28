@@ -160,7 +160,10 @@ export default function AuthPage() {
                         <Input 
                           type="email"
                           placeholder="Enter your email" 
-                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
                           disabled={isLoading}
                         />
                       </FormControl>
@@ -179,7 +182,10 @@ export default function AuthPage() {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter your password"
-                            {...field}
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            name={field.name}
                             disabled={isLoading}
                           />
                           <Button
@@ -230,7 +236,10 @@ export default function AuthPage() {
                         <Input 
                           type="email"
                           placeholder="your@email.com" 
-                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
                           disabled={isLoading}
                         />
                       </FormControl>
@@ -249,7 +258,10 @@ export default function AuthPage() {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Create a strong password"
-                            {...field}
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            name={field.name}
                             disabled={isLoading}
                           />
                           <Button
@@ -283,7 +295,10 @@ export default function AuthPage() {
                           <Input
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirm your password"
-                            {...field}
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            name={field.name}
                             disabled={isLoading}
                           />
                           <Button

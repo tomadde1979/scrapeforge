@@ -38,6 +38,7 @@ const createProjectSchema = z.object({
   maxFollowersPerProfile: z.number().min(10).max(500).default(100),
   maxCommentsPerProfile: z.number().min(10).max(200).default(50),
   maxPostsToScan: z.number().min(1).max(50).default(10),
+  useRealScraping: z.boolean().default(false),
 });
 
 type CreateProjectForm = z.infer<typeof createProjectSchema>;
@@ -67,6 +68,7 @@ export default function CreateProjectModal() {
       maxFollowersPerProfile: 100,
       maxCommentsPerProfile: 50,
       maxPostsToScan: 10,
+      useRealScraping: false,
     },
   });
 
@@ -219,6 +221,30 @@ export default function CreateProjectModal() {
                 </FormItem>
               )}
             />
+
+            {/* Real Scraping Mode */}
+            <div className="space-y-4 pt-4 border-t border-gray-200">
+              <FormField
+                control={form.control}
+                name="useRealScraping"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-gradient-to-r from-green-50 to-blue-50">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base font-semibold text-green-800">🔥 Real Scraping Mode</FormLabel>
+                      <p className="text-sm text-green-600">
+                        Enable actual web scraping from Instagram and Reddit (instead of demo data)
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Advanced Scraping Options */}
             <div className="space-y-4 pt-4 border-t border-gray-200">

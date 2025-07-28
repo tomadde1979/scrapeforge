@@ -2,8 +2,10 @@ import { storage } from '../storage';
 import { parseEmailFromText } from './openai';
 import { InstagramScraper } from './scrapers/instagram';
 import { InstagramAdvancedScraper } from './scrapers/instagram-advanced';
+import { RealInstagramScraper } from './scrapers/real-instagram';
 import { LinkedInScraper } from './scrapers/linkedin';
 import { RedditScraper } from './scrapers/reddit';
+import { RealRedditScraper } from './scrapers/real-reddit';
 import { BaseScraper, ScrapedProfile } from './scrapers/base';
 
 export class ScraperEngine {
@@ -180,7 +182,11 @@ export class ScraperEngine {
 
     switch (platform.toLowerCase()) {
       case 'instagram':
-        // Use advanced scraper if advanced features are enabled
+        // Use real scraper for actual data collection
+        if (process.env.NODE_ENV === 'production' || project?.useRealScraping) {
+          return new RealInstagramScraper(options);
+        }
+        // Use advanced scraper if advanced features are enabled (demo mode)
         if (project?.includeFollowers || project?.includeCommenters) {
           return new InstagramAdvancedScraper(options);
         }
@@ -188,6 +194,10 @@ export class ScraperEngine {
       case 'linkedin':
         return new LinkedInScraper(options);
       case 'reddit':
+        // Use real Reddit scraper for production
+        if (process.env.NODE_ENV === 'production' || project?.useRealScraping) {
+          return new RealRedditScraper(options);
+        }
         return new RedditScraper(options);
       default:
         return null;

@@ -12,6 +12,12 @@ export interface ScraperOptions {
   keywords: string[];
   maxProfiles: number;
   rateLimitMs: number;
+  // Advanced scraping options
+  includeFollowers?: boolean;
+  includeCommenters?: boolean;
+  maxFollowersPerProfile?: number;
+  maxCommentsPerProfile?: number;
+  maxPostsToScan?: number;
 }
 
 export abstract class BaseScraper {

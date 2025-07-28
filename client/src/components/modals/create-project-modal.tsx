@@ -21,6 +21,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { useAppStore } from '@/store/use-app-store';
 import { projectsApi } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
@@ -31,6 +33,11 @@ const createProjectSchema = z.object({
   platforms: z.array(z.string()).min(1, 'Select at least one platform'),
   keywords: z.string().min(1, 'Keywords are required'),
   domains: z.string().optional(),
+  includeFollowers: z.boolean().default(false),
+  includeCommenters: z.boolean().default(false),
+  maxFollowersPerProfile: z.number().min(10).max(500).default(100),
+  maxCommentsPerProfile: z.number().min(10).max(200).default(50),
+  maxPostsToScan: z.number().min(1).max(50).default(10),
 });
 
 type CreateProjectForm = z.infer<typeof createProjectSchema>;
@@ -55,6 +62,11 @@ export default function CreateProjectModal() {
       platforms: [],
       keywords: '',
       domains: '',
+      includeFollowers: false,
+      includeCommenters: false,
+      maxFollowersPerProfile: 100,
+      maxCommentsPerProfile: 50,
+      maxPostsToScan: 10,
     },
   });
 
@@ -207,6 +219,139 @@ export default function CreateProjectModal() {
                 </FormItem>
               )}
             />
+
+            {/* Advanced Scraping Options */}
+            <div className="space-y-4 pt-4 border-t border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">🚧 Advanced Scraping Options</h3>
+              
+              <FormField
+                control={form.control}
+                name="includeFollowers"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Include Followers</FormLabel>
+                      <p className="text-sm text-gray-500">
+                        Scrape followers from target profiles to expand your reach
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="includeCommenters"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Include Commenters</FormLabel>
+                      <p className="text-sm text-gray-500">
+                        Scrape users who comment on target profiles' posts
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {/* Advanced Settings - Show only if advanced options are enabled */}
+              {(form.watch('includeFollowers') || form.watch('includeCommenters')) && (
+                <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-gray-900">Limits & Settings</h4>
+                  
+                  {form.watch('includeFollowers') && (
+                    <FormField
+                      control={form.control}
+                      name="maxFollowersPerProfile"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Max Followers per Profile</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="10"
+                              max="500"
+                              {...field}
+                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            />
+                          </FormControl>
+                          <p className="text-xs text-gray-500">
+                            Higher numbers provide more data but take longer (10-500)
+                          </p>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {form.watch('includeCommenters') && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="maxPostsToScan"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Max Posts to Scan</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                min="1"
+                                max="50"
+                                {...field}
+                                onChange={(e) => field.onChange(parseInt(e.target.value))}
+                              />
+                            </FormControl>
+                            <p className="text-xs text-gray-500">
+                              Number of recent posts to scan for comments (1-50)
+                            </p>
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="maxCommentsPerProfile"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Max Comments per Profile</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                min="10"
+                                max="200"
+                                {...field}
+                                onChange={(e) => field.onChange(parseInt(e.target.value))}
+                              />
+                            </FormControl>
+                            <p className="text-xs text-gray-500">
+                              Maximum comments to collect per target profile (10-200)
+                            </p>
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-800">
+                      <strong>Note:</strong> Advanced scraping can significantly increase processing time and may encounter rate limits. 
+                      Start with smaller limits for testing.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
               <Button

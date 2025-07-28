@@ -1,6 +1,7 @@
 import { storage } from '../storage';
 import { parseEmailFromText } from './openai';
 import { InstagramScraper } from './scrapers/instagram';
+import { InstagramAdvancedScraper } from './scrapers/instagram-advanced';
 import { LinkedInScraper } from './scrapers/linkedin';
 import { RedditScraper } from './scrapers/reddit';
 import { BaseScraper, ScrapedProfile } from './scrapers/base';
@@ -53,7 +54,7 @@ export class ScraperEngine {
       for (const platform of platforms) {
         if (!this.activeJobs.get(projectId)) break; // Check if job was cancelled
 
-        const scraper = this.createScraper(platform, keywords);
+        const scraper = this.createScraper(platform, keywords, project);
         if (!scraper) continue;
 
         await storage.createScrapingLog({
@@ -165,15 +166,24 @@ export class ScraperEngine {
     return this.activeJobs.get(projectId) === true;
   }
 
-  private createScraper(platform: string, keywords: string[]): BaseScraper | null {
+  private createScraper(platform: string, keywords: string[], project?: any): BaseScraper | null {
     const options = {
       keywords,
       maxProfiles: 1000, // Increased to scan many more profiles
       rateLimitMs: 800, // Faster scraping - 0.8 second delay
+      includeFollowers: project?.includeFollowers || false,
+      includeCommenters: project?.includeCommenters || false,
+      maxFollowersPerProfile: project?.maxFollowersPerProfile || 100,
+      maxCommentsPerProfile: project?.maxCommentsPerProfile || 50,
+      maxPostsToScan: project?.maxPostsToScan || 10,
     };
 
     switch (platform.toLowerCase()) {
       case 'instagram':
+        // Use advanced scraper if advanced features are enabled
+        if (project?.includeFollowers || project?.includeCommenters) {
+          return new InstagramAdvancedScraper(options);
+        }
         return new InstagramScraper(options);
       case 'linkedin':
         return new LinkedInScraper(options);

@@ -21,6 +21,12 @@ export const projects = pgTable("projects", {
   domains: text("domains"),
   status: text("status").notNull().default("active"), // active, paused, completed
   userId: varchar("user_id").notNull(),
+  // New follower/commenter scraping options
+  includeFollowers: boolean("include_followers").default(false),
+  includeCommenters: boolean("include_commenters").default(false),
+  maxFollowersPerProfile: integer("max_followers_per_profile").default(100),
+  maxCommentsPerProfile: integer("max_comments_per_profile").default(50),
+  maxPostsToScan: integer("max_posts_to_scan").default(10),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -37,6 +43,10 @@ export const scrapingResults = pgTable("scraping_results", {
   linkInBio: text("link_in_bio"),
   isAiParsed: boolean("is_ai_parsed").default(false),
   foundAt: timestamp("found_at").defaultNow().notNull(),
+  // New fields for tracking source type
+  sourceType: text("source_type").default("direct"), // direct, follower, commenter
+  sourceProfile: text("source_profile"), // Profile that this was found through (for followers/commenters)
+  sourcePostUrl: text("source_post_url"), // For commenters, the post they commented on
 });
 
 export const scrapingLogs = pgTable("scraping_logs", {

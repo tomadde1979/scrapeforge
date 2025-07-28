@@ -1,0 +1,85 @@
+Build a fullstack web app called **ScrapeForge** that allows me to manage scraping projects and extract public email addresses from various platforms and websites.
+
+---
+
+🧱 TECH STACK:
+Frontend:
+- React + TypeScript + Tailwind CSS (shadcn/ui components)
+- Zustand for state management
+
+Backend:
+- Node.js + Express + TypeScript
+- PostgreSQL (via Neon) using Drizzle ORM
+- Puppeteer for headless scraping (extensible per platform)
+- OpenAI for AI-enhanced parsing (when needed)
+
+---
+
+🧭 CORE FEATURES:
+
+1. **Project System**  
+   - I can create unlimited "Projects" (e.g. Zodiac Zero, My Bands, Future App X)
+   - Each project stores settings independently (platforms, keywords, rate limits, scrape logs)
+
+2. **Platform & Keyword Configuration**  
+   - Per project, I can select platforms to scrape (e.g. Instagram, Reddit, LinkedIn, etc.)  
+   - Each platform allows me to set keywords, hashtags, or bio phrases to target
+   - Allow free input of domains too (for obscure or non-mainstream sites)
+
+3. **Scraping Engine**  
+   - Launchable from a “Start Scraping” button
+   - Puppeteer-based scrapers per platform  
+   - Scraper looks for public email addresses in:
+     - Bio/description fields
+     - Link-in-bio URLs (carrd, linktree, beacons, etc.)
+     - AI-powered parsing if needed (detect obfuscated email)
+   - Show real-time queue progress in UI
+
+4. **Visual Dashboard**  
+   - Stats at top (Profiles scanned, Emails found, % with email, AI-parsed)
+   - Filterable result list with:
+     - Profile name
+     - Bio link
+     - Email found
+     - Platform
+     - Export button
+   - Download results per project to XLS (using `sheetjs`)
+
+5. **Manual DM Support**  
+   - Optional button per profile to copy handle & jump to their platform profile
+   - No automation! Just facilitate manual outreach
+
+6. **Admin Interface**  
+   - View all scraping logs per project
+   - Error tracking per platform
+   - Toggle rate limits per platform (to avoid IP bans)
+
+---
+
+🎨 UI STYLE:
+
+- Use a clean, minimalist layout like Stripe Dashboard or Notion
+- Sidebar for navigation: Dashboard, Projects, Settings
+- Light theme
+- Icons via FontAwesome
+
+---
+
+🚀 SCALABILITY:
+
+- Scrapers should be modular per platform
+- Each platform's scraper = separate file with same function signature
+- AI email detection should be an optional fallback per profile (use OpenAI for fuzzy detection)
+
+---
+
+⚠️ LEGAL & SAFETY REMINDERS:
+
+- Scrape only public information
+- Don’t store passwords, session cookies or private login credentials
+- Never send automated DMs — only manual message options
+- Include a disclaimer in settings page: "Use responsibly. Only collect publicly visible data."
+
+---
+
+Start from scratch. Set up the file structure cleanly. Let me know what is scaffolded already and what is still pending. Use the name `ScrapeForge` for the app.

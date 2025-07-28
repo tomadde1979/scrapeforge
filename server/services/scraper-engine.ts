@@ -17,6 +17,8 @@ export class ScraperEngine {
   }
 
   async startScraping(projectId: string): Promise<void> {
+    console.log(`Starting scraping for project ${projectId}`);
+    
     if (this.activeJobs.get(projectId)) {
       throw new Error('Scraping job already running for this project');
     }
@@ -26,6 +28,7 @@ export class ScraperEngine {
       throw new Error('Project not found');
     }
 
+    console.log(`Project found: ${project.name}, platforms: ${JSON.stringify(project.platforms)}`);
     this.activeJobs.set(projectId, true);
 
     try {
@@ -61,13 +64,17 @@ export class ScraperEngine {
         });
 
         try {
+          console.log(`Starting ${platform} scraper with keywords: ${keywords}`);
           const profiles = await scraper.scrapeProfiles((progress, currentProfile) => {
+            console.log(`Progress: ${progress}%, Current: ${currentProfile}`);
             // Update job progress
             storage.updateScrapingJob(job.id, {
               progress: Math.floor(progress),
               currentProfile,
             });
           });
+          
+          console.log(`${platform} scraper completed. Found ${profiles.length} profiles`);
 
           // Process each profile
           for (const profile of profiles) {

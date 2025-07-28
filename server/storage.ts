@@ -87,7 +87,7 @@ export class DatabaseStorage implements IStorage {
   async createProject(project: InsertProject): Promise<Project> {
     const [newProject] = await db
       .insert(projects)
-      .values([project])
+      .values(project)
       .returning();
     return newProject;
   }
@@ -137,8 +137,11 @@ export class DatabaseStorage implements IStorage {
       conditions.push(sql`${scrapingResults.profileName} ILIKE ${`%${search}%`}`);
     }
 
-    if (conditions.length > 1) {
-      query = query.where(and(...conditions));
+    if (conditions.length > 0) {
+      query = db
+        .select()
+        .from(scrapingResults)
+        .where(and(...conditions));
     }
 
     return await query.orderBy(desc(scrapingResults.foundAt));
@@ -155,7 +158,7 @@ export class DatabaseStorage implements IStorage {
   async createScrapingLog(log: InsertScrapingLog): Promise<ScrapingLog> {
     const [newLog] = await db
       .insert(scrapingLogs)
-      .values([log])
+      .values(log)
       .returning();
     return newLog;
   }

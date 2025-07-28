@@ -248,22 +248,56 @@ app.post('/api/projects/:id/start-scraping', authenticateToken, async (req, res)
     const { id } = req.params;
     const { platforms } = req.body;
     
+    console.log(`Starting scraping for project ${id}, platforms:`, platforms);
+    
+    // Find the project
+    const project = mockProjects.find(p => p.id === id);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    
+    // Validate platforms
+    if (!platforms || platforms.length === 0) {
+      return res.status(400).json({ message: 'No platforms specified' });
+    }
+    
     // Create new scraping jobs for each platform
     const newJobs = platforms.map(platform => ({
       id: Date.now().toString() + Math.random(),
       projectId: id,
       platform,
       status: 'running',
-      progress: 0,
+      progress: Math.floor(Math.random() * 20), // Start with some progress
       totalProfiles: Math.floor(Math.random() * 100) + 50,
-      scannedProfiles: 0,
-      foundEmails: 0,
-      currentProfile: '',
+      scannedProfiles: Math.floor(Math.random() * 10),
+      foundEmails: Math.floor(Math.random() * 5),
+      currentProfile: `@${platform}_user_${Math.floor(Math.random() * 1000)}`,
       startedAt: new Date()
     }));
     
     mockJobs.push(...newJobs);
-    res.json({ message: 'Scraping started', jobs: newJobs });
+    
+    // Also add some mock results for immediate feedback
+    const newResults = platforms.map(platform => ({
+      id: Date.now().toString() + Math.random(),
+      projectId: id,
+      profileName: `@${platform}_profile_${Math.floor(Math.random() * 1000)}`,
+      profileUrl: `https://${platform}.com/user${Math.floor(Math.random() * 1000)}`,
+      platform,
+      email: `contact${Math.floor(Math.random() * 1000)}@example.com`,
+      emailSource: 'bio',
+      bioText: 'Sample bio text with contact information',
+      isAiParsed: false,
+      foundAt: new Date()
+    }));
+    
+    mockResults.push(...newResults);
+    
+    res.json({ 
+      message: `Scraping started successfully for ${platforms.join(', ')}`, 
+      jobs: newJobs,
+      results: newResults
+    });
   } catch (error) {
     console.error('Start scraping error:', error);
     res.status(500).json({ message: 'Failed to start scraping' });

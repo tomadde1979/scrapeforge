@@ -56,6 +56,17 @@ const Dashboard = () => {
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!newProject.name.trim()) {
+      alert('Please enter a project name');
+      return;
+    }
+    if (newProject.platforms.length === 0) {
+      alert('Please select at least one platform');
+      return;
+    }
+    
     try {
       const response = await fetch('/api/projects', {
         method: 'POST',
@@ -80,9 +91,14 @@ const Dashboard = () => {
           includeCommenters: false,
           useHeadlessMode: true
         });
+        alert(`Project "${project.name}" created successfully!`);
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to create project: ${errorData.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Create project error:', error);
+      alert('Network error while creating project. Please try again.');
     }
   };
 
@@ -98,10 +114,18 @@ const Dashboard = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        console.log('Scraping started:', result);
         fetchDashboardData(); // Refresh data
+        alert(`Scraping started successfully for ${platforms.join(', ')}!`);
+      } else {
+        const errorData = await response.json();
+        console.error('Scraping failed:', errorData);
+        alert(`Failed to start scraping: ${errorData.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Start scraping error:', error);
+      alert('Network error while starting scraping. Please try again.');
     }
   };
 

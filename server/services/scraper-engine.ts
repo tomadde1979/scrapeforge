@@ -168,8 +168,8 @@ export class ScraperEngine {
   private createScraper(platform: string, keywords: string[]): BaseScraper | null {
     const options = {
       keywords,
-      maxProfiles: 50, // Configurable limit
-      rateLimitMs: 2000, // 2 second delay between requests
+      maxProfiles: 1000, // Increased to scan many more profiles
+      rateLimitMs: 800, // Faster scraping - 0.8 second delay
     };
 
     switch (platform.toLowerCase()) {

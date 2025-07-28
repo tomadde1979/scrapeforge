@@ -73,17 +73,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/projects/:id/scrape", async (req, res) => {
     try {
       const projectId = req.params.id;
+      console.log(`🚀 SCRAPING ENDPOINT CALLED - Project ID: ${projectId}`);
+      console.log(`🕐 Timestamp: ${new Date().toISOString()}`);
+      
+      // Verify project exists before starting scraper
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        console.log(`❌ Project not found in storage: ${projectId}`);
+        return res.status(404).json({ error: 'Project not found' });
+      }
+      
+      console.log(`📋 Project found: ${project.name}`);
+      console.log(`🔧 Settings: useRealScraping=${project.useRealScraping}, useHeadlessMode=${project.useHeadlessMode}`);
+      console.log(`🎯 Keywords: ${project.keywords}`);
+      console.log(`📱 Platforms: ${JSON.stringify(project.platforms)}`);
       
       if (scraperEngine.isScrapingActive(projectId)) {
+        console.log(`⚠️ Scraping already in progress for project: ${projectId}`);
         return res.status(400).json({ error: "Scraping already in progress" });
       }
 
       // Start scraping in background
-      scraperEngine.startScraping(projectId).catch(console.error);
+      console.log(`🎬 Starting scraper for project: ${project.name}`);
+      scraperEngine.startScraping(projectId).catch((error) => {
+        console.error(`❌ CRITICAL SCRAPER ERROR for project ${projectId}:`, error);
+        console.error(`❌ Error stack:`, error.stack);
+      });
       
+      console.log(`✅ Scraping started successfully for project: ${project.name}`);
       res.json({ message: "Scraping started", projectId });
     } catch (error) {
-      res.status(500).json({ error: "Failed to start scraping" });
+      console.error(`❌ ROUTE ERROR in /api/projects/:id/scrape:`, error);
+      console.error(`❌ Error stack:`, error.stack);
+      res.status(500).json({ error: "Failed to start scraping", details: error.message });
     }
   });
 

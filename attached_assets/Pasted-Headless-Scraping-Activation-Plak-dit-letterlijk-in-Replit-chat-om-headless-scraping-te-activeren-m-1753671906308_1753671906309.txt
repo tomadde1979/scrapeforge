@@ -1,0 +1,106 @@
+Headless Scraping Activation
+(Plak dit letterlijk in Replit chat om headless scraping te activeren met Puppeteer of Playwright, zonder Meta API’s)
+
+🛠️ TASK: Enable Headless Web Scraping for Public Instagram/LinkedIn Profiles (no login required)
+
+🔧 Objective:
+Extend ScrapeForge to use headless browser scraping (via Puppeteer or Playwright) instead of relying on APIs.
+
+🔍 Target use case:
+Visit public profile or hashtag pages (e.g. https://www.instagram.com/explore/tags/astrology/)
+
+Extract public info such as:
+
+Bio
+
+Display name / username
+
+External URL in bio
+
+Email if mentioned
+
+Follower/following count (optional)
+
+Optionally visit visible commenters or followers and extract emails from their bios
+
+✅ Required Implementation:
+Scraper Engine Setup
+
+Use Playwright with chromium in stealth mode
+
+No login, no cookies, no personal account
+
+Set custom user-agent to mimic a normal browser
+
+Randomize delays (2–5 sec) between page loads
+
+Retry failed pages up to 2x
+
+Instagram Hashtag Scraping
+
+Input: hashtag or keyword
+
+Navigate to: https://www.instagram.com/explore/tags/{hashtag}/
+
+Scroll to load 10–20 posts
+
+For each post:
+
+Click into post
+
+Extract:
+
+Poster username
+
+Bio (via profile page)
+
+External URL (if available)
+
+Email if shown in bio
+
+Optional Deep Scraping
+
+If enabled, collect email data from:
+
+Top commenters on the post
+
+First 5 followers of poster profile
+
+Do not go more than 2 layers deep
+
+Output Integration
+
+Return results into the results table in ScrapeForge
+
+Flag where each email was found (e.g. "user bio", "commenter bio")
+
+Enable export to XLS as usual
+
+Safety & Anti-Ban
+
+Add stealth plugin (playwright-extra-plugin-stealth)
+
+Rotate user agents
+
+Add optional proxy support (env-based)
+
+Limit scraping to max 30 profiles per session
+
+Log warnings if scraping takes longer than expected
+
+UI Update
+
+Add toggle in project config: Use API vs Headless Mode
+
+If Headless Mode is active and platform is Instagram or LinkedIn, use Playwright flow
+
+Show runtime logs in dashboard (e.g. “Scraping profile @xyz...”)
+
+📦 Dependencies:
+Install:
+
+bash
+Kopiëren
+Bewerken
+npm install playwright playwright-extra playwright-extra-plugin-stealth user-agents
+Let me know once scraping works. I’ll help you test & optimize the stealth logic.

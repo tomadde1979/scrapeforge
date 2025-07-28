@@ -28,6 +28,7 @@ export const projects = pgTable("projects", {
   maxCommentsPerProfile: integer("max_comments_per_profile").default(50),
   maxPostsToScan: integer("max_posts_to_scan").default(10),
   useRealScraping: boolean("use_real_scraping").default(true),
+  useHeadlessMode: boolean("use_headless_mode").default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -119,6 +120,13 @@ export const insertProjectSchema = createInsertSchema(projects).pick({
   keywords: true,
   domains: true,
   userId: true,
+  useRealScraping: true,
+  useHeadlessMode: true,
+  includeFollowers: true,
+  includeCommenters: true,
+  maxFollowersPerProfile: true,
+  maxCommentsPerProfile: true,
+  maxPostsToScan: true,
 });
 
 export const insertScrapingResultSchema = createInsertSchema(scrapingResults).omit({

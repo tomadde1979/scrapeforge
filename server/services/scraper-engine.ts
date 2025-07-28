@@ -3,6 +3,8 @@ import { parseEmailFromText } from './openai';
 import { ApiInstagramScraper } from './scrapers/api-instagram';
 import { ApiRedditScraper } from './scrapers/api-reddit';
 import { AuthenticLinkedInScraper } from './scrapers/authentic-linkedin';
+import { HeadlessInstagramScraper } from './scrapers/headless-instagram';
+import { HeadlessLinkedInScraper } from './scrapers/headless-linkedin';
 import { BaseScraper, ScrapedProfile } from './scrapers/base';
 
 export class ScraperEngine {
@@ -179,8 +181,18 @@ export class ScraperEngine {
 
     switch (platform.toLowerCase()) {
       case 'instagram':
+        // Use headless browser scraping if enabled and system supports it
+        if (project?.useHeadlessMode) {
+          console.log('🤖 Using headless browser scraping for Instagram');
+          return new HeadlessInstagramScraper(options);
+        }
         return new ApiInstagramScraper(options);
       case 'linkedin':
+        // Use headless browser scraping if enabled and system supports it
+        if (project?.useHeadlessMode) {
+          console.log('🤖 Using headless browser scraping for LinkedIn');
+          return new HeadlessLinkedInScraper(options);
+        }
         return new AuthenticLinkedInScraper(options);
       case 'reddit':
         return new ApiRedditScraper(options);

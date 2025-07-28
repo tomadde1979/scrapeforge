@@ -39,6 +39,7 @@ const createProjectSchema = z.object({
   maxCommentsPerProfile: z.number().min(10).max(200).default(50),
   maxPostsToScan: z.number().min(1).max(50).default(10),
   useRealScraping: z.boolean().default(true),
+  useHeadlessMode: z.boolean().default(true),
 });
 
 type CreateProjectForm = z.infer<typeof createProjectSchema>;
@@ -69,6 +70,7 @@ export default function CreateProjectModal() {
       maxCommentsPerProfile: 50,
       maxPostsToScan: 10,
       useRealScraping: true,
+      useHeadlessMode: true,
     },
   });
 
@@ -233,6 +235,27 @@ export default function CreateProjectModal() {
                       <FormLabel className="text-base font-semibold text-green-800">🔥 Real Scraping Mode</FormLabel>
                       <p className="text-sm text-green-600">
                         Enable actual web scraping from Instagram and Reddit (instead of demo data)
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="useHeadlessMode"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-gradient-to-r from-purple-50 to-indigo-50">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base font-semibold text-purple-800">🤖 Headless Browser Mode</FormLabel>
+                      <p className="text-sm text-purple-600">
+                        Use stealth browser automation for Instagram and LinkedIn. More authentic but slower than APIs.
                       </p>
                     </div>
                     <FormControl>

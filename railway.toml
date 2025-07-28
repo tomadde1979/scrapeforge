@@ -2,14 +2,11 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "node server.cjs"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
-[[services]]
-name = "railway-fullstack-app"
-
-[services.web]
-startCommand = "npm start"
+[build.env]
+NODE_ENV = "production"

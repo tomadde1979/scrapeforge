@@ -1,0 +1,38 @@
+{
+  "name": "railway-fullstack-app",
+  "version": "1.0.0",
+  "description": "Railway-ready fullstack JavaScript app with Vite + React frontend and Express backend",
+  "main": "server.cjs",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon server.cjs",
+    "dev:client": "cd client && npm run dev",
+    "build": "npm run build:client",
+    "build:client": "cd client && npm install && npm run build",
+    "start": "NODE_ENV=production node server.cjs",
+    "install:all": "npm install && cd client && npm install",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "railway",
+    "fullstack",
+    "react",
+    "vite",
+    "express",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT"
+}

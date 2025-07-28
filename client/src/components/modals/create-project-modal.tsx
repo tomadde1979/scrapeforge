@@ -86,9 +86,10 @@ export default function CreateProjectModal() {
       });
     },
     onError: (error) => {
+      console.error('Create project error:', error);
       toast({
         title: 'Error',
-        description: 'Failed to create project. Please try again.',
+        description: `Failed to create project: ${error.message || 'Please try again.'}`,
         variant: 'destructive',
       });
     },

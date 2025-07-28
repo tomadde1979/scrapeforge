@@ -1,6 +1,7 @@
 import { Bell, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/store/use-app-store";
+import LogoutButton from "@/components/layout/logout-button";
 
 export default function Header() {
   const setCreateProjectModalOpen = useAppStore(state => state.setCreateProjectModalOpen);
@@ -24,6 +25,7 @@ export default function Header() {
             <Plus className="h-4 w-4" />
             <span>New Project</span>
           </Button>
+          <LogoutButton />
         </div>
       </div>
     </header>

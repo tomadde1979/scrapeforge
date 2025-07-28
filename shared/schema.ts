@@ -107,26 +107,15 @@ export const scrapingJobsRelations = relations(scrapingJobs, ({ one }) => ({
 }));
 
 // Insert schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  email: true,
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
 });
 
-export const insertProjectSchema = createInsertSchema(projects).pick({
-  name: true,
-  description: true,
-  platforms: true,
-  keywords: true,
-  domains: true,
-  userId: true,
-  useRealScraping: true,
-  useHeadlessMode: true,
-  includeFollowers: true,
-  includeCommenters: true,
-  maxFollowersPerProfile: true,
-  maxCommentsPerProfile: true,
-  maxPostsToScan: true,
+export const insertProjectSchema = createInsertSchema(projects).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const insertScrapingResultSchema = createInsertSchema(scrapingResults).omit({
@@ -142,6 +131,35 @@ export const insertScrapingLogSchema = createInsertSchema(scrapingLogs).omit({
 export const insertScrapingJobSchema = createInsertSchema(scrapingJobs).omit({
   id: true,
   createdAt: true,
+});
+
+// Types
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+export type ScrapingResult = typeof scrapingResults.$inferSelect;
+export type InsertScrapingResult = typeof scrapingResults.$inferInsert;
+export type ScrapingLog = typeof scrapingLogs.$inferSelect;
+export type InsertScrapingLog = typeof scrapingLogs.$inferInsert;
+export type ScrapingJob = typeof scrapingJobs.$inferSelect;
+export type InsertScrapingJob = typeof scrapingJobs.$inferInsert;
+
+// Auth schemas
+export const loginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export const registerSchema = z.object({
+  username: z.string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be less than 20 characters")
+    .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, hyphens, and underscores"),
+  email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
 });
 
 // Types

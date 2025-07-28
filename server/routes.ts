@@ -2,19 +2,106 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { ScraperEngine } from "./services/scraper-engine";
-import { insertProjectSchema } from "@shared/schema";
+import { insertProjectSchema, loginSchema, registerSchema } from "@shared/schema";
 import { z } from "zod";
+import { sessionMiddleware } from "./middleware/session";
+import { authenticateSession, hashPassword, verifyPassword } from "./middleware/auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const scraperEngine = ScraperEngine.getInstance();
 
-  // Projects endpoints
-  app.get("/api/projects", async (req, res) => {
+  // Session middleware
+  app.use(sessionMiddleware);
+
+  // Authentication routes
+  app.post("/api/auth/register", async (req, res) => {
     try {
-      // For demo purposes, use a default user ID
-      // In production, this would come from authentication
-      const userId = "default-user";
-      const projects = await storage.getProjects(userId);
+      const { username, password, email } = registerSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+
+      // Hash password and create user
+      const hashedPassword = await hashPassword(password);
+      const user = await storage.createUser({
+        username,
+        password: hashedPassword,
+        email: email || null,
+      });
+
+      res.status(201).json({
+        message: "Account created successfully",
+        user: { id: user.id, username: user.username, email: user.email },
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid input", 
+          errors: error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+        });
+      }
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Failed to create account" });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = loginSchema.parse(req.body);
+      
+      // Find user
+      const user = await storage.getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid username or password" });
+      }
+
+      // Verify password
+      const isValidPassword = await verifyPassword(password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid username or password" });
+      }
+
+      // Create session
+      (req.session as any).userId = user.id;
+      
+      res.json({
+        message: "Login successful",
+        user: { id: user.id, username: user.username, email: user.email },
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid input", 
+          errors: error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+        });
+      }
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Login failed" });
+    }
+  });
+
+  app.get("/api/auth/me", authenticateSession, async (req, res) => {
+    res.json(req.user);
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout error:", err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
+      res.clearCookie("scrapeforge.sid");
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
+  // Protected Projects endpoints
+  app.get("/api/projects", authenticateSession, async (req, res) => {
+    try {
+      const projects = await storage.getProjects(req.user!.id);
       res.json(projects);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch projects" });
@@ -33,11 +120,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/projects", async (req, res) => {
+  app.post("/api/projects", authenticateSession, async (req, res) => {
     try {
       const projectData = insertProjectSchema.parse({
         ...req.body,
-        userId: "default-user", // In production, get from auth
+        userId: req.user!.id,
       });
       
       const project = await storage.createProject(projectData);
